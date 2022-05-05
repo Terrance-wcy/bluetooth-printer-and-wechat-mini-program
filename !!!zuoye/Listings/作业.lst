@@ -1,0 +1,269 @@
+C51 COMPILER V9.59.0.0   ____                                                              03/20/2020 11:59:25 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE ____
+OBJECT MODULE PLACED IN .\Objects\作业.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE 作业.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\作业
+                    -.lst) TABS(2) OBJECT(.\Objects\作业.obj)
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include <string.h>
+   3          #include <math.h>
+   4          #include <intrins.h>
+   5          
+   6          #define uchar unsigned char
+   7          typedef unsigned int uint;
+   8          
+   9          
+  10          
+  11          uchar R_data;
+  12          bit R_flag=0;
+  13          void delay(int i)
+  14          {
+  15   1        int j,k; 
+  16   1        for(j=i;j>0;j--)
+  17   1          for(k=125;k>0;k--);
+  18   1      }
+  19          
+  20          //void Uart_SendByte(uchar Byte)
+  21          //{
+  22          //  SBUF =  Byte;
+  23          //  while(!TI)                   //如果发送完毕，硬件会置位TI
+  24          //  {
+  25          //    _nop_();  
+  26          //  } 
+  27          //}
+  28          uchar code table[]={0xc0,0xf9,0xa4,0xb0,0x99,0x92,0x82,
+  29                                  0xf8,0x80,0x90};
+  30          
+  31          void display(int Dis_data)
+  32          {
+  33   1        
+  34   1         P0=table[Dis_data/1000];
+  35   1         P20 = 0;
+  36   1         delay(2);
+  37   1         P20 = 1;
+  38   1      
+  39   1         P0=table[Dis_data%1000/100];
+  40   1         P21 = 0;
+  41   1         delay(2);
+  42   1         P21 = 1;
+  43   1      
+  44   1         P0=table[Dis_data%1000%100/10];
+  45   1         P22 = 0;
+  46   1         delay(2);
+  47   1         P22 = 1;
+  48   1      
+  49   1         P0=table[Dis_data%10];
+  50   1         P23 = 0;
+  51   1         delay(2);
+  52   1         P23 = 1;
+  53   1         
+  54   1      }
+C51 COMPILER V9.59.0.0   ____                                                              03/20/2020 11:59:25 PAGE 2   
+
+  55          
+  56          
+  57          
+  58          void Delay100ms()   //@11.0592MHz
+  59          {
+  60   1        unsigned char i, j;
+  61   1      
+  62   1        i = 180;
+  63   1        j = 73;
+  64   1        do
+  65   1        {
+  66   2          while (--j);
+  67   2        } while (--i);
+  68   1      }
+  69          
+  70          
+  71          void print(uchar ch) // 单字节打印函数
+  72          {
+  73   1        SBUF = ch;
+  74   1        while(TI == 0);
+  75   1        TI = 0;
+  76   1      }
+  77          
+  78          void UartInit(void)   //115200bps@11.0592MHz
+  79          
+  80          {
+  81   1      
+  82   1        PCON = 0x80;    //使能波特率倍速位SMOD
+  83   1      
+  84   1        SCON = 0x50;    //8位数据,可变波特率
+  85   1      
+  86   1        AUXR &= 0xBF;   //定时器1时钟为Fosc/12,即12T
+  87   1      
+  88   1        AUXR &= 0xFE;   //串口1选择定时器1为波特率发生器
+  89   1      
+  90   1        TMOD &= 0x0F;   //清除定时器1模式位
+  91   1      
+  92   1        TMOD = 0x20;    //设定定时器1为8位自动重装方式
+  93   1      
+  94   1        TL1 = 0xFF;   //设定定时初值
+  95   1      
+  96   1        TH1 = 0xFF;   //设定定时器重装值
+  97   1      
+  98   1        ET1 = 0;    //禁止定时器1中断
+  99   1      
+ 100   1        TR1 = 1;    //启动定时器1
+ 101   1      
+ 102   1      }
+ 103          
+ 104          
+ 105          void print_chs(uchar ch[]) // 字符打印函数
+ 106          {
+ 107   1        uchar i;
+ 108   1        for(i=0;i<strlen(ch);i++) //应用到字串处理函数，故须调用
+ 109   1          print(ch[i]);
+ 110   1      }
+ 111          
+ 112          void hanzitest()
+ 113          {
+ 114   1        print(0x1B); // 打印机初始化
+ 115   1        print(0x40);  // 打印机初始化
+ 116   1      
+C51 COMPILER V9.59.0.0   ____                                                              03/20/2020 11:59:25 PAGE 3   
+
+ 117   1      Delay100ms();
+ 118   1      
+ 119   1          print(0x0A);// 打印并走纸
+ 120   1          print(0x1b);
+ 121   1          print(0x62);
+ 122   1          print(0x00);
+ 123   1          print(0x0a);
+ 124   1        print_chs("商家小票");            
+ 125   1        print(0x0A);Delay100ms();
+ 126   1      print_chs("*****");     // 
+ 127   1        print(0x0A);Delay100ms();
+ 128   1      
+ 129   1      
+ 130   1        print_chs("1号口袋");     // 
+ 131   1        print(0x0A);Delay100ms();
+ 132   1        print_chs("备注:");     // 
+ 133   1        print(0x0A);Delay100ms();
+ 134   1      
+ 135   1          print(0x0A);// 打印并走纸
+ 136   1          print(0x1b);
+ 137   1          print(0x62);
+ 138   1          print(0x00);
+ 139   1          print(0x04);
+ 140   1            print_chs("不要辣");     // 
+ 141   1        print(0x0A);Delay100ms();
+ 142   1        print_chs("食品名称:");     // 
+ 143   1        print(0x0A);Delay100ms();
+ 144   1        
+ 145   1          print(0x0A);// 打印并走纸
+ 146   1          print(0x1b);
+ 147   1          print(0x62);
+ 148   1          print(0x00);
+ 149   1          print(0x04);
+ 150   1          print_chs("麻辣豆腐");    // 
+ 151   1        print(0x0A);Delay100ms();
+ 152   1        print_chs("份:");     // 
+ 153   1        print(0x0A);Delay100ms();
+ 154   1      
+ 155   1          print(0x0A);// 打印并走纸
+ 156   1          print(0x1b);
+ 157   1          print(0x62);
+ 158   1          print(0x00);
+ 159   1          print(0x04);
+ 160   1            print_chs("2");     // 
+ 161   1        print(0x0A);Delay100ms();
+ 162   1        print_chs("总价:");     // 
+ 163   1        print(0x0A);Delay100ms();
+ 164   1      
+ 165   1          print(0x0A);// 打印并走纸
+ 166   1          print(0x1b);
+ 167   1          print(0x62);
+ 168   1          print(0x00);
+ 169   1          print(0x04);
+ 170   1            print_chs("20");     // 
+ 171   1        print(0x0A);Delay100ms();
+ 172   1        print_chs("*****");     // 
+ 173   1        print(0x0A);Delay100ms();
+ 174   1      
+ 175   1        print_chs("餐盒费:2");     // 
+ 176   1        print(0x0A);Delay100ms();
+ 177   1      
+ 178   1        print_chs("配送费:2");     // 
+C51 COMPILER V9.59.0.0   ____                                                              03/20/2020 11:59:25 PAGE 4   
+
+ 179   1        print(0x0A);Delay100ms();
+ 180   1      
+ 181   1        print_chs("*****");     // 
+ 182   1        print(0x0A);Delay100ms();
+ 183   1        
+ 184   1        print_chs("支付金额:");  // 
+ 185   1        print(0x0A);Delay100ms();
+ 186   1            print(0x0A);// 打印并走纸
+ 187   1          print(0x1b);
+ 188   1          print(0x62);
+ 189   1          print(0x00);
+ 190   1          print(0x04);
+ 191   1            print_chs("24");     // 
+ 192   1        print(0x0A);Delay100ms();
+ 193   1      
+ 194   1        print_chs("外卖地址:");// 
+ 195   1        print(0x0A);Delay100ms();
+ 196   1            print(0x0A);// 打印并走纸
+ 197   1          print(0x1b);
+ 198   1          print(0x62);
+ 199   1          print(0x00);
+ 200   1          print(0x04);
+ 201   1            print_chs("公寓五号楼");     // 
+ 202   1        print(0x0A);Delay100ms();
+ 203   1      }
+ 204          
+ 205          
+ 206          void main(void)
+ 207          {
+ 208   1        int a=0;
+ 209   1         UartInit();
+ 210   1        while(1)
+ 211   1        {
+ 212   2      
+ 213   2      
+ 214   2      if(P35==0)  //打印
+ 215   2          {
+ 216   3            delay(5);
+ 217   3            if(P35==0)
+ 218   3            {
+ 219   4              a++;
+ 220   4              if(a>9999)
+ 221   4                a=0;
+ 222   4              hanzitest();
+ 223   4              while(!P35); //松手检测
+ 224   4            }   
+ 225   3          }
+ 226   2          display(a);
+ 227   2      
+ 228   2        }
+ 229   1      }
+ 230          
+ 231              
+ 232          
+ 233            
+ 234            
+ 235          
+ 236          
+ 237          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+C51 COMPILER V9.59.0.0   ____                                                              03/20/2020 11:59:25 PAGE 5   
+
+   CODE SIZE        =    654    ----
+   CONSTANT SIZE    =    132    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      1       6
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

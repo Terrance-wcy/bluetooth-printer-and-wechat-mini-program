@@ -1,0 +1,10 @@
+/* pages/components/bill/bill.wxss */
+view{
+  font-size: 35px;
+  background-color:gray; 
+  color: yellowgreen
+}
+text{
+  font-size: 15px;
+  
+}

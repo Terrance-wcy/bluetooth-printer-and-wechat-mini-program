@@ -1,0 +1,4 @@
+/* pages/components/bag/bag.wxss */
+view{
+  color: green;
+}

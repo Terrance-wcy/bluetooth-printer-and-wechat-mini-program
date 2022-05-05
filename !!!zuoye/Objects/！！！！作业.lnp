@@ -1,0 +1,4 @@
+".\Objects\STARTUP.obj",
+".\Objects\作业.obj" 
+TO ".\Objects\！！！！作业" 
+PRINT(".\Listings\！！！！作业.m51") RAMSIZE(256) 

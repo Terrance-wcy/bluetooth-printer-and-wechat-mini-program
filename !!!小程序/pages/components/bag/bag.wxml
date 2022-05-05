@@ -1,0 +1,10 @@
+<!--pages/components/bag/bag.wxml-->
+<text>今日库存：</text>
+<view name="1">西红柿</view>
+<view>土豆：</view>
+<view>洋葱：</view>
+<view>黄瓜：</view>
+<view>白菜：</view>
+<view>猪肉：</view>
+<view>鱼肉：</view>
+<text>日期：2020-2-25</text>

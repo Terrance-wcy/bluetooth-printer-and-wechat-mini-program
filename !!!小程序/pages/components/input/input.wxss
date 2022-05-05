@@ -1,0 +1,4 @@
+/* pages/components/input/input.wxss */
+view{
+  color: green;
+}

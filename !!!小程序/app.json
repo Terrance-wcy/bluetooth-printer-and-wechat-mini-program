@@ -1,0 +1,20 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/components/dishes/dishes",
+    "pages/components/take/take",
+    "pages/components/bluetooth/bluetooth",
+    "pages/components/bill/bill",
+    "pages/components/input/input",
+    "pages/components/bag/bag"
+  
+  ],
+  "window": {
+    "backgroundColor": "#f4f4f4",
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#a4a3a3",
+    "navigationBarTitleText": "数科外卖",
+    "navigationBarTextStyle": "white"
+  },
+  "sitemapLocation": "sitemap.json"
+}

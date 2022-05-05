@@ -1,0 +1,5 @@
+<!--pages/components/bill/bill.wxml-->
+<view>今日共计接受单数：</view>
+<view>今日好评率：</view>
+<view>今日总入帐数：</view>
+<text>日期：2020-2-25</text>
